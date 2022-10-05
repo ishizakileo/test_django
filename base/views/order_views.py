@@ -8,10 +8,12 @@ class OrderIndexView(LoginRequiredMixin, ListView):
     model = Order   
     template_name = 'pages/orders.html'
     # 並び替えを降順にしている。（新しいのが上になる）
-    ordering = '-created_at'
+    # ordering = '-created_at'
 
     def get_queryset(self):
-        return Order.objects.filter(user=self.request.user)
+        # return Order.objects.filter(user=self.request.user)
+        # order_byで降順に並び替え。
+        return Order.objects.filter(user=self.request.user).order_by('-created_at')
 
 
 class OrderDetailView(LoginRequiredMixin, DetailView):
