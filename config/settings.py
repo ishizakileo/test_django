@@ -165,10 +165,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TAX_RATE = 0.1
 
 # Stripe API Key
-try:
-    STRIPE_API_SECRET_KEY = env.str('STRIPE_API_SECRET_KEY')
-except:
-    STRIPE_API_SECRET_KEY = heroku_env['STRIPE_API_SECRET_KEY']
+# try:
+    # STRIPE_API_SECRET_KEY = env.str('STRIPE_API_SECRET_KEY')
+# except:
+STRIPE_API_SECRET_KEY = heroku_env['STRIPE_API_SECRET_KEY']
 
 # スキーマ&マージン
 try:
