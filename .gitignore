@@ -1,2 +1,2 @@
-.env.dev
-.env.prob
+secret/.env.dev
+secret/.env.prob
