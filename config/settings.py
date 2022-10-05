@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import environ  #　追記
 from django.contrib import messages
+from os import environ as heroku_env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,19 +27,31 @@ root = environ.Path(BASE_DIR / 'secrets')
 # env.read_env(root('.env.prob'))
 
 # 開発環境用
-env.read_env(root('.env.dev'))
+try:
+    env.read_env(root('.env.dev'))
+except:
+    pass
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env.str('SECRET_KEY')
+try:
+    SECRET_KEY = env.str('SECRET_KEY')
+except:
+    SECRET_KEY = heroku_env['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env.bool('DEBUG')
+try:
+    DEBUG = env.bool('DEBUG')
+except:
+    DEBUG = heroku_env['DEBUG']
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+try:
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+except:
+    ALLOWED_HOSTS = heroku_env['ALLOWED_HOSTS']
 
 
 # Application definition
@@ -152,10 +165,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TAX_RATE = 0.1
 
 # Stripe API Key
-STRIPE_API_SECRET_KEY = env.str('STRIPE_API_SECRET_KEY')
+try:
+    STRIPE_API_SECRET_KEY = env.str('STRIPE_API_SECRET_KEY')
+except:
+    STRIPE_API_SECRET_KEY = heroku_env['STRIPE_API_SECRET_KEY']
 
 # スキーマ&マージン
-MY_URL = env.str('MY_URL')
+try:
+    MY_URL = env.str('MY_URL')
+except:
+    MY_URL = heroku_env['MY_URL']
 
 # カスタムユーザーモデル
 AUTH_USER_MODEL = 'base.User'
