@@ -9,11 +9,38 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core import serializers
 import json
 from django.contrib import messages
+# メール送信用
+from config import settings
+from django.core.mail import send_mail
+
 
     
 stripe.api_key = settings.STRIPE_API_SECRET_KEY
     
-    
+def make_sentence(shipping, items):
+    shipping = json.loads(shipping)[0]['fields']
+    shi_sentence = 'name:{}\nzipcode:{}\nprefecture:{}\ncity:{}\naddress1:{}\naddress2:{}\ntel:{}\n'.format(
+        shipping['name'],
+        shipping['zipcode'],
+        shipping['prefecture'],
+        shipping['city'],
+        shipping['address1'],
+        shipping['address2'],
+        shipping['tel'],
+    )
+    # shi_sentence = [type(shipping), len(shipping)]
+    item_sentence = []
+    items = json.loads(items)
+    for i in range(len(items)):
+        # item_sentence = [type(items),len(items)]
+        item_sentence.append('{}が{}個'.format(items[i]['name'], items[i]['quantity']))
+    item_sentence = '\n'.join(item_sentence)
+
+    return send_mail('発送準備通知', f'{shi_sentence}\n{item_sentence}', 'from@example.com',
+            ['teardrop.reo0420@gmail.com'],fail_silently=False,
+            )
+
+
 class PaySuccessView(LoginRequiredMixin, TemplateView):
     template_name = 'pages/success.html'
     
@@ -26,6 +53,9 @@ class PaySuccessView(LoginRequiredMixin, TemplateView):
     
         # カート情報削除
         del request.session['cart']
+        
+        #メール送信
+        make_sentence(order.shipping, order.items)
     
         return super().get(request, *args, **kwargs)
     
@@ -86,8 +116,8 @@ def check_profile_filled(profile):
     elif profile.address1 is None or profile.address1 == '':
         return False
     return True
-    
-    
+
+
 class PayWithStripe(LoginRequiredMixin, View):
     
     def post(self, request, *args, **kwargs):

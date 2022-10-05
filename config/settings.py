@@ -181,3 +181,13 @@ MESSAGE_TAGS = {
 
 # custom_context_processors
 TITLE = 'NiceSite'
+
+# メール送信用
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' #設定しなくてもデフォルトでこの値になるっぽい
+EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST = 'smtp.googlemail.com' #これでもいける
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'teardrop.reo0420@gmail.com'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER # send_mailのfromがNoneの場合自動で入る。
+EMAIL_HOST_PASSWORD = 'ktciawzeutvnliit'
