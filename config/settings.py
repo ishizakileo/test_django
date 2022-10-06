@@ -199,7 +199,7 @@ MESSAGE_TAGS = {
 
 
 # custom_context_processors
-TITLE = 'NiceSite'
+TITLE = '遊戯王フリーマーケット'
 
 
 # メール送信用

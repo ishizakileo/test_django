@@ -24,6 +24,8 @@ class Order(models.Model):
     memo = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # 発送確認のため追加
+    sent_at = models.BooleanField(default=False)
 
     def __str__(self):
         return self.id

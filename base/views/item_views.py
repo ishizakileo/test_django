@@ -32,7 +32,7 @@ class CategoryListView(ListView):
 	# 関数を上書き
 	def get_queryset(self):
 		self.category = Category.objects.get(slug=self.kwargs['pk'])
-		return Item.objects.filte(is_published=True, category=self.category)
+		return Item.objects.filter(is_published=True, category=self.category)
 
 	def get_context_data(self, **kwargs):
 		context = super().get_context_data(**kwargs)

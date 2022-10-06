@@ -30,4 +30,6 @@ class OrderDetailView(LoginRequiredMixin, DetailView):
         # json to dict
         context['items'] = json.loads(obj.items)
         context['shipping'] = json.loads(obj.shipping)
+        # 発送確認のため、追記
+        context['send_at'] = obj.sent_at
         return context

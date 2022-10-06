@@ -72,7 +72,7 @@
         </div>
         {% else %}
         <div class="my-3 ">
-          <button class="btn btn-secondary" disabled>未発送</button>
+          <button class="btn btn-secondary" disabled>{{send_at}}</button>
         </div>
         {% endif %}
         {% if object.canceled_at %}
