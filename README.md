@@ -1,2 +1,7 @@
 # Django-Portfolio
-hello!
+このレポジトリをAWS上へ展開しました。<br>
+## 【構成図】<br>
+![Django.pin](Django.png) 
+## 【工夫点】<br>
+GitHubへのPushをトリガーに、ソースコードを自動でEC2へデプロイし、コードの変更を即時に反映させる機能を追加しました。<br>
+![CodePipline.png](CodePipline.png)
