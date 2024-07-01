@@ -32,14 +32,14 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser):
     id = models.CharField(default=create_id, primary_key=True, max_length=22)
     username = models.CharField(
-        max_length=50, unique=True, blank=True, default='匿名')
+        max_length=50, unique=False, blank=True, default='匿名')
     email = models.EmailField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     objects = UserManager()
-    USERNAME_FIELD = 'username'
-    EMAIL_FIELD = 'email'
-    REQUIRED_FIELDS = ['email', ]
+    USERNAME_FIELD = 'email'
+    #EMAIL_FIELD = 'email'
+    REQUIRED_FIELDS = ['username' ]
     
     def __str__(self):
         return self.email
