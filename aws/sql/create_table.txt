@@ -1,0 +1,9 @@
+-- プライマリで実行
+CREATE TABLE replication_test (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CLOCK_TIMESTAMP(),
+    value TEXT
+);
+
+CREATE INDEX idx_replication_test_created_at 
+ON replication_test(created_at);
