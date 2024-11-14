@@ -1,0 +1,23 @@
+-- 特定のトランザクションIDが適用されているか確認
+SELECT pg_xact_commit_timestamp('{transaction_id}'::xid) as commit_time;
+
+-- より詳細な情報を取得
+SELECT 
+    txid_current() as current_txid,
+    pg_last_committed_xact() as last_committed,
+    pg_xact_commit_timestamp('{transaction_id}'::xid) as specific_tx_commit_time;
+
+-- トランザクションの適用状態を監視
+SELECT 
+    pg_last_wal_receive_lsn() as receive_lsn,
+    pg_last_wal_replay_lsn() as replay_lsn,
+    pg_last_xact_replay_timestamp() as replay_timestamp,
+    txid_current() as current_txid,
+    '{target_transaction_id}'::xid as target_txid,
+    CASE 
+        WHEN txid_current() >= '{target_transaction_id}'::xid 
+        THEN 'Applied'
+        ELSE 'Pending'
+    END as transaction_status;
+
+
