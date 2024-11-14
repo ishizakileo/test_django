@@ -1,0 +1,16 @@
+-- プライマリで実行
+CREATE OR REPLACE FUNCTION insert_test_data(num_records INTEGER)
+RETURNS void AS $$
+BEGIN
+    FOR i IN 1..num_records LOOP
+        INSERT INTO replication_test (value)
+        VALUES ('test_data_' || i);
+        IF i % 1000 = 0 THEN
+            COMMIT;
+        END IF;
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- テストデータの投入（例：10万件）
+SELECT insert_test_data(100000);
