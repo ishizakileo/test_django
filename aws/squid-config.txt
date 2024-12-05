@@ -1,0 +1,57 @@
+# Squid Forward Proxy Basic Configuration
+# /etc/squid/squid.conf
+
+# 基本設定
+http_port 3128
+
+# キャッシュマネージャー設定
+cache_mgr admin@example.com
+
+# DNSの設定
+dns_nameservers 8.8.8.8 8.8.4.4
+
+# メモリキャッシュサイズ
+cache_mem 256 MB
+
+# アクセスログの設定
+logformat combined %>a %ui %un [%tl] "%rm %ru HTTP/%rv" %>Hs %<st "%{Referer}>h" "%{User-Agent}>h"
+access_log /var/log/squid/access.log combined
+
+# キャッシュログ
+cache_log /var/log/squid/cache.log
+
+# キャッシュディレクトリの設定
+cache_dir ufs /var/spool/squid 100 16 256
+
+# リフレッシュパターン
+refresh_pattern ^ftp:           1440    20%     10080
+refresh_pattern ^gopher:        1440    0%      1440
+refresh_pattern -i (/cgi-bin/|\?) 0     0%      0
+refresh_pattern .               0       20%     4320
+
+# ACL定義
+acl localnet src 10.0.0.0/8     # RFC1918 possible internal network
+acl localnet src 172.16.0.0/12  # RFC1918 possible internal network
+acl localnet src 192.168.0.0/16 # RFC1918 possible internal network
+acl localnet src fc00::/7       # RFC 4193 local private network range
+acl localnet src fe80::/10      # RFC 4291 link-local (directly plugged) machines
+
+acl SSL_ports port 443
+acl Safe_ports port 80          # http
+acl Safe_ports port 21          # ftp
+acl Safe_ports port 443         # https
+acl Safe_ports port 70          # gopher
+acl Safe_ports port 210         # wais
+acl Safe_ports port 1025-65535  # unregistered ports
+acl CONNECT method CONNECT
+
+# アクセス制御（全許可設定）
+http_access allow localnet
+http_access allow localhost
+http_access deny !Safe_ports
+http_access deny CONNECT !SSL_ports
+http_access allow all
+
+# その他の最適化設定
+coredump_dir /var/spool/squid
+max_filedesc 8192
