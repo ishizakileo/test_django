@@ -1,0 +1,14 @@
+SELECT 
+    pg_size_pretty(pg_relation_size('replication_test')) as table_size,
+    pg_size_pretty(pg_indexes_size('replication_test')) as indexes_size,
+    pg_size_pretty(pg_total_relation_size('replication_test') - 
+                  pg_relation_size('replication_test') - 
+                  pg_indexes_size('replication_test')) as other_size,
+    pg_total_relation_size('replication_test') as total_bytes,
+    pg_relation_size('replication_test') as table_bytes,
+    (SELECT count(*) FROM replication_test) as row_count,
+    CASE 
+        WHEN (SELECT count(*) FROM replication_test) > 0 
+        THEN pg_relation_size('replication_test') / (SELECT count(*) FROM replication_test)
+        ELSE 0 
+    END as bytes_per_row;
