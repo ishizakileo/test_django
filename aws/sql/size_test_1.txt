@@ -1,0 +1,99 @@
+-- テーブル定義
+CREATE TABLE size_test (
+    id SERIAL PRIMARY KEY,
+    -- character varying (9つ)
+    varchar_field1 CHARACTER VARYING(1000),
+    varchar_field2 CHARACTER VARYING(1000),
+    varchar_field3 CHARACTER VARYING(1000),
+    varchar_field4 CHARACTER VARYING(1000),
+    varchar_field5 CHARACTER VARYING(1000),
+    varchar_field6 CHARACTER VARYING(1000),
+    varchar_field7 CHARACTER VARYING(1000),
+    varchar_field8 CHARACTER VARYING(1000),
+    varchar_field9 CHARACTER VARYING(1000),
+    
+    -- text[] (12個)
+    text_array1 TEXT[],
+    text_array2 TEXT[],
+    text_array3 TEXT[],
+    text_array4 TEXT[],
+    text_array5 TEXT[],
+    text_array6 TEXT[],
+    text_array7 TEXT[],
+    text_array8 TEXT[],
+    text_array9 TEXT[],
+    text_array10 TEXT[],
+    text_array11 TEXT[],
+    text_array12 TEXT[],
+    
+    -- boolean (2つ)
+    bool_field1 BOOLEAN,
+    bool_field2 BOOLEAN,
+    
+    -- jsonb (4つ)
+    jsonb_field1 JSONB,
+    jsonb_field2 JSONB,
+    jsonb_field3 JSONB,
+    jsonb_field4 JSONB,
+    
+    -- timestamp with time zone (2つ)
+    created_at TIMESTAMP WITH TIME ZONE,
+    updated_at TIMESTAMP WITH TIME ZONE
+);
+
+-- インデックス作成（サイズを近づけるため）
+CREATE INDEX idx_size_test_created_at ON size_test(created_at);
+CREATE INDEX idx_size_test_jsonb1 ON size_test USING GIN (jsonb_field1);
+
+-- サンプルデータ挿入関数
+CREATE OR REPLACE FUNCTION insert_size_test_data()
+RETURNS void AS $$
+DECLARE
+    text_array_sample TEXT[] := ARRAY[
+        'sample text 1', 'sample text 2', 'sample text 3',
+        'sample text 4', 'sample text 5'
+    ];
+    jsonb_sample JSONB := '{
+        "key1": "value1",
+        "key2": "value2",
+        "array": [1, 2, 3, 4, 5],
+        "nested": {
+            "field1": "nested1",
+            "field2": "nested2"
+        }
+    }'::jsonb;
+BEGIN
+    INSERT INTO size_test (
+        varchar_field1, varchar_field2, varchar_field3, varchar_field4, varchar_field5,
+        varchar_field6, varchar_field7, varchar_field8, varchar_field9,
+        text_array1, text_array2, text_array3, text_array4, text_array5, text_array6,
+        text_array7, text_array8, text_array9, text_array10, text_array11, text_array12,
+        bool_field1, bool_field2,
+        jsonb_field1, jsonb_field2, jsonb_field3, jsonb_field4,
+        created_at, updated_at
+    )
+    SELECT
+        -- character varying fields (約500バイトずつ)
+        repeat('A', 500), repeat('B', 500), repeat('C', 500),
+        repeat('D', 500), repeat('E', 500), repeat('F', 500),
+        repeat('G', 500), repeat('H', 500), repeat('I', 500),
+        
+        -- text array fields (約200バイトずつ)
+        text_array_sample, text_array_sample, text_array_sample,
+        text_array_sample, text_array_sample, text_array_sample,
+        text_array_sample, text_array_sample, text_array_sample,
+        text_array_sample, text_array_sample, text_array_sample,
+        
+        -- boolean fields
+        TRUE, FALSE,
+        
+        -- jsonb fields (約300バイトずつ)
+        jsonb_sample, jsonb_sample, jsonb_sample, jsonb_sample,
+        
+        -- timestamp fields
+        CURRENT_TIMESTAMP, CURRENT_TIMESTAMP;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 使用例：
+-- SELECT insert_size_test_data();

@@ -1,0 +1,106 @@
+-- バッチ処理用の改良版関数
+CREATE OR REPLACE FUNCTION insert_size_test_data(num_records INTEGER)
+RETURNS void AS $$
+DECLARE
+    batch_size INTEGER := 1000; -- バッチサイズ
+    total_batches INTEGER;
+    current_batch INTEGER;
+    text_array_sample TEXT[] := ARRAY[
+        'sample text 1', 'sample text 2', 'sample text 3',
+        'sample text 4', 'sample text 5'
+    ];
+    jsonb_sample JSONB := '{
+        "key1": "value1",
+        "key2": "value2",
+        "array": [1, 2, 3, 4, 5],
+        "nested": {
+            "field1": "nested1",
+            "field2": "nested2"
+        }
+    }'::jsonb;
+BEGIN
+    -- 総バッチ数を計算
+    total_batches := CEIL(num_records::numeric / batch_size);
+    
+    -- バッチ単位で処理
+    FOR current_batch IN 1..total_batches LOOP
+        INSERT INTO size_test (
+            varchar_field1, varchar_field2, varchar_field3, varchar_field4, varchar_field5,
+            varchar_field6, varchar_field7, varchar_field8, varchar_field9,
+            text_array1, text_array2, text_array3, text_array4, text_array5, text_array6,
+            text_array7, text_array8, text_array9, text_array10, text_array11, text_array12,
+            bool_field1, bool_field2,
+            jsonb_field1, jsonb_field2, jsonb_field3, jsonb_field4,
+            created_at, updated_at
+        )
+        SELECT
+            -- character varying fields
+            repeat('A', 500), repeat('B', 500), repeat('C', 500),
+            repeat('D', 500), repeat('E', 500), repeat('F', 500),
+            repeat('G', 500), repeat('H', 500), repeat('I', 500),
+            
+            -- text array fields
+            text_array_sample, text_array_sample, text_array_sample,
+            text_array_sample, text_array_sample, text_array_sample,
+            text_array_sample, text_array_sample, text_array_sample,
+            text_array_sample, text_array_sample, text_array_sample,
+            
+            -- boolean fields
+            CASE WHEN random() > 0.5 THEN TRUE ELSE FALSE END,
+            CASE WHEN random() > 0.5 THEN TRUE ELSE FALSE END,
+            
+            -- jsonb fields
+            jsonb_sample, jsonb_sample, jsonb_sample, jsonb_sample,
+            
+            -- timestamp fields
+            CURRENT_TIMESTAMP - (random() * interval '365 days'),
+            CURRENT_TIMESTAMP - (random() * interval '30 days')
+        FROM generate_series(
+            1,
+            CASE 
+                WHEN current_batch < total_batches THEN batch_size
+                ELSE num_records - (current_batch - 1) * batch_size
+            END
+        );
+        
+        -- 進捗報告
+        RAISE NOTICE 'Processed batch % of % (% records)', 
+            current_batch, 
+            total_batches,
+            LEAST(batch_size, num_records - (current_batch - 1) * batch_size);
+    END LOOP;
+    
+    -- 完了報告
+    RAISE NOTICE 'Inserted % records successfully', num_records;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 使用例：
+-- 1000件のデータを挿入
+-- SELECT insert_size_test_data(1000);
+
+-- テーブルのサイズと行数を確認するクエリ
+SELECT 
+    pg_size_pretty(pg_relation_size('size_test')) as table_size,
+    pg_size_pretty(pg_indexes_size('size_test')) as indexes_size,
+    pg_size_pretty(pg_total_relation_size('size_test')) as total_size,
+    (SELECT count(*) FROM size_test) as row_count,
+    CASE 
+        WHEN (SELECT count(*) FROM size_test) > 0 
+        THEN pg_relation_size('size_test') / (SELECT count(*) FROM size_test)
+        ELSE 0 
+    END as bytes_per_row;
+
+
+
+使用例
+-- 1万件のデータを挿入
+SELECT insert_size_test_data(10000);
+
+-- 10万件のデータを挿入
+SELECT insert_size_test_data(100000);
+
+-- サイズ確認
+SELECT 
+    pg_size_pretty(pg_total_relation_size('size_test')) as total_size,
+    (SELECT count(*) FROM size_test) as row_count;
