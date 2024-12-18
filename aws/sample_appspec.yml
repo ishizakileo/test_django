@@ -1,0 +1,36 @@
+version: 0.0
+os: linux
+
+files:
+  # フロントエンドの配置
+  - source: dist/
+    destination: /var/www/html/
+    
+  # バックエンドJARの配置
+  - source: backend/target/myapp.jar
+    destination: /opt/myapp/
+    
+  # 設定ファイルの配置
+  - source: config/prod.conf
+    destination: /etc/myapp/
+
+permissions:
+  - object: /opt/myapp/
+    pattern: "*.jar"
+    owner: appuser
+    mode: 755
+  - object: /etc/myapp/
+    pattern: "*.conf"
+    owner: appuser
+    mode: 644
+
+hooks:
+  BeforeInstall:
+    - location: scripts/backup_existing.sh
+      timeout: 300
+  AfterInstall:
+    - location: scripts/configure_app.sh
+      timeout: 300
+  ApplicationStart:
+    - location: scripts/start_service.sh
+      timeout: 300
