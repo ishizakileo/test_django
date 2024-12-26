@@ -1,0 +1,35 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:GET",
+                "apigateway:HEAD",
+                "apigateway:OPTIONS",
+                "apigateway:PATCH",
+                "apigateway:POST",
+                "apigateway:PUT"
+            ],
+            "Resource": [
+                "arn:aws:apigateway:*::/apis",
+                "arn:aws:apigateway:*::/apis/*",
+                "arn:aws:apigateway:*::/restapis",
+                "arn:aws:apigateway:*::/restapis/*",
+                "arn:aws:apigateway:*::/tags/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:GET"
+            ],
+            "Resource": [
+                "arn:aws:apigateway:*::/apikeys",
+                "arn:aws:apigateway:*::/apikeys/*",
+                "arn:aws:apigateway:*::/usageplans",
+                "arn:aws:apigateway:*::/usageplans/*"
+            ]
+        }
+    ]
+}
