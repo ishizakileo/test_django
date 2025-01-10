@@ -1,0 +1,137 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "APIGatewayNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "apigateway:GET",
+                "apigateway:HEAD",
+                "apigateway:OPTIONS",
+                "apigateway:PATCH",
+                "apigateway:POST",
+                "apigateway:PUT"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "S3NonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "s3:Get*",
+                "s3:List*",
+                "s3:Put*",
+                "s3:AbortMultipartUpload",
+                "s3:RestoreObject",
+                "s3:CreateBucket",
+                "s3:ReplicateObject",
+                "s3:ReplicateTags",
+                "s3:ObjectOwnerOverrideToBucketOwner"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SNSNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "sns:Add*",
+                "sns:Check*",
+                "sns:Create*",
+                "sns:Get*",
+                "sns:List*",
+                "sns:Publish",
+                "sns:Set*",
+                "sns:Subscribe",
+                "sns:Tag*",
+                "sns:Untag*",
+                "sns:Update*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "SQSNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "sqs:Add*",
+                "sqs:Change*",
+                "sqs:Create*",
+                "sqs:Get*",
+                "sqs:List*",
+                "sqs:Receive*",
+                "sqs:Send*",
+                "sqs:Set*",
+                "sqs:Tag*",
+                "sqs:Untag*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "LambdaNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "lambda:Create*",
+                "lambda:Get*",
+                "lambda:List*",
+                "lambda:Invoke*",
+                "lambda:Publish*",
+                "lambda:Put*",
+                "lambda:Tag*",
+                "lambda:Untag*",
+                "lambda:Update*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudShellNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "cloudshell:Get*",
+                "cloudshell:Create*",
+                "cloudshell:Start*",
+                "cloudshell:Stop*",
+                "cloudshell:Put*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "CloudWatchNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "cloudwatch:Describe*",
+                "cloudwatch:Get*",
+                "cloudwatch:List*",
+                "cloudwatch:Put*",
+                "cloudwatch:Tag*",
+                "cloudwatch:Untag*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "LogsNonDelete",
+            "Effect": "Allow",
+            "Action": [
+                "logs:Create*",
+                "logs:Get*",
+                "logs:List*",
+                "logs:Put*",
+                "logs:Start*",
+                "logs:Stop*",
+                "logs:Tag*",
+                "logs:Untag*",
+                "logs:Test*",
+                "logs:Update*"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "ExplicitlyDenyDeletes",
+            "Effect": "Deny",
+            "Action": [
+                "*:Delete*",
+                "*:Remove*",
+                "*:Terminate*"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
