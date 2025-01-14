@@ -1,0 +1,97 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "DenyDeletionOfAllResources",
+            "Effect": "Deny",
+            "Action": [
+                "*:Delete*",
+                "*:Remove*",
+                
+                // 既存のサービス（一部抜粋）
+                "ec2:TerminateInstances",
+                "lambda:DeleteFunction",
+                "apigateway:DELETE",
+                "rds:DeleteDBInstance",
+                "ecs:DeleteCluster",
+                "ecr:DeleteRepository",
+                "sns:DeleteTopic",
+                "sqs:DeleteQueue",
+                "cognito-idp:DeleteUserPool",
+                "dynamodb:DeleteTable",
+                "elasticfilesystem:DeleteFileSystem",
+                
+                // EventBridge
+                "events:DeleteRule",
+                "events:DeleteApiDestination",
+                "events:DeleteArchive",
+                "events:DeleteConnection",
+                
+                // Systems Manager
+                "ssm:DeleteParameter",
+                "ssm:DeleteDocument",
+                "ssm:DeleteMaintenanceWindow",
+                "ssm:DeletePatchBaseline",
+                
+                // CodeCommit
+                "codecommit:DeleteRepository",
+                "codecommit:DeleteBranch",
+                
+                // CloudWatch Logs
+                "logs:DeleteLogGroup",
+                "logs:DeleteLogStream",
+                "logs:DeleteMetricFilter",
+                
+                // ACM
+                "acm:DeleteCertificate",
+                
+                // Backup
+                "backup:DeleteBackupPlan",
+                "backup:DeleteBackupVault",
+                "backup:DeleteRecoveryPoint",
+                
+                // CloudFormation
+                "cloudformation:DeleteStack",
+                "cloudformation:DeleteChangeSet",
+                
+                // CloudFront
+                "cloudfront:DeleteDistribution",
+                "cloudfront:DeleteOriginAccessControl",
+                
+                // CloudTrail
+                "cloudtrail:DeleteTrail",
+                
+                // CodePipeline
+                "codepipeline:DeletePipeline",
+                "codepipeline:DeleteWebhook",
+                
+                // CodeBuild
+                "codebuild:DeleteProject",
+                "codebuild:DeleteReportGroup",
+                
+                // KMS
+                "kms:DeleteAlias",
+                "kms:ScheduleKeyDeletion",
+                
+                // Secrets Manager
+                "secretsmanager:DeleteSecret",
+                
+                // Security Hub
+                "securityhub:DeleteHub",
+                "securityhub:DeleteMembers",
+                
+                // WAFv2
+                "wafv2:DeleteIPSet",
+                "wafv2:DeleteRegexPatternSet",
+                "wafv2:DeleteRuleGroup",
+                "wafv2:DeleteWebACL"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "StringEquals": {
+                    "aws:ResourceTag/Protect": "true"
+                }
+            }
+        }
+    ]
+}
