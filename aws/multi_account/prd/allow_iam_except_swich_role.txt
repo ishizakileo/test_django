@@ -1,0 +1,38 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowIAMAccess",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateRole",
+                "iam:CreatePolicy",
+                "iam:CreatePolicyVersion",
+                "iam:CreateUser",
+                "iam:CreateGroup",
+                "iam:UpdateRole",
+                "iam:UpdateUser",
+                "iam:UpdateGroup",
+                "iam:PutRolePolicy",
+                "iam:PutUserPolicy",
+                "iam:PutGroupPolicy"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "DenySpecificResources",
+            "Effect": "Deny",
+            "Action": [
+                "iam:CreateRole",
+                "iam:CreatePolicy",
+                "iam:CreatePolicyVersion",
+                "iam:UpdateRole",
+                "iam:PutRolePolicy"
+            ],
+            "Resource": [
+                "arn:aws:iam::123456789012:role/restricted-role-name",
+                "arn:aws:iam::123456789012:policy/restricted-policy-name"
+            ]
+        }
+    ]
+}
